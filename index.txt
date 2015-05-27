@@ -11,7 +11,7 @@ design.
 # Design Exercise: Adding Players
 
 Last week, you implemented the
-[`CoinGameModel`](src/cs3500/hw03/CoinGameModel.java) interface with
+[`CoinGameModel`](hw03/src/cs3500/hw03/CoinGameModel.java) interface with
 two different sets of rules. As designed, the interface says nothing
 about players or turns---it merely tracks the state of the game from
 move to move, and it's totally oblivious to *who* takes each turn.
@@ -34,7 +34,7 @@ turns, and the winner. It should handle an arbitrary number of players,
 it must allow new players to join at any time, and players’ identities
 must be stable.
 
- 1. Modify the [`CoinGameModel`](src/cs3500/hw03/CoinGameModel.java)
+ 1. Modify the [`CoinGameModel`](hw03/src/cs3500/hw03/CoinGameModel.java)
     interface to support the new features.
 
 Be sure to list any assumptions you make, and don’t forget Javadoc.
@@ -50,7 +50,7 @@ interface, while thinking carefully about how the data corresponds to
 the information in the problem domain and about what invariants are
 needed to rule out representations that don't map to the problem domain.
 
- 2. In [`StrictCoinGameModel.java`](src/cs3500/hw03/StrictCoinGameModel.java),
+ 2. In [`StrictCoinGameModel.java`](hw03/src/cs3500/hw03/StrictCoinGameModel.java),
     declare the fields needed to support the methods in the interface
     you’ve designed.
 
@@ -69,7 +69,7 @@ that you know what your representation is and what your invariants are,
 you can design how instances will be constructed. You need not implement
 construction, however—we are just interested in the interface for now.
 
- 4. In [`StrictCoinGameModel.java`](src/cs3500/hw03/StrictCoinGameModel.java),
+ 4. In [`StrictCoinGameModel.java`](hw03/src/cs3500/hw03/StrictCoinGameModel.java),
     describe your constructor API. This comprises the names of any
     public constructors and static factory methods that you desire^[You
     don’t need to get fancy.], along with the names and types of their
