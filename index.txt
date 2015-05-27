@@ -3,12 +3,16 @@
 % due **Wed.** 5/27 --- self-eval due **Fri.** 5/29
 [modeline]: # vim: ft=markdown
 
-# Purpose
+# Part 1: Interfaces are Separate from Implementation
 
-The goal of this assignment is to practice interface and representation
-design.
+## Purpose
 
-# Design Exercise: Adding Players
+The goal of this assignment is to practice interface design. You will learn
+that a well-designed interface is distinct from its implementations- meaning
+that the user of an interface does not necessarily care about *how* something
+is done (implementation) but *what* is done.
+
+## Design Exercise: Adding Players
 
 Last week, you implemented the
 [`CoinGameModel`](hw03/src/cs3500/hw03/CoinGameModel.java) interface with
@@ -19,9 +23,11 @@ move to move, and it's totally oblivious to *who* takes each turn.
 Suppose, instead, that we wanted our coin game classes to keep track of
 whose turn it is, to enforce the order of play, and to be able to tell
 us who has won once the game is over. Additionally, we want to allow new
-players to join the game at any time. However an individual player is
-identified to and by the client must be stable, that is it will not change
-even if new players are added to the game.
+players to join the game at any time.
+
+Players must be able to be uniquely identified by the client, and that
+identification must be stable- that is, it will not change when new players are
+added to the game.
 
 For these exercises, you will consider how to modify the interface
 design and the representation to support these new features. (You won’t
@@ -41,9 +47,16 @@ Be sure to list any assumptions you make, and don’t forget Javadoc.
 
 **You need not implement this new interface.**
 
-## Representation and Invariants
+# Part 2: Representation and Invariants
 
-Once you have designed the interface, you can begin designing a
+## Purpose
+
+The purpose of this part of the assignment is to practice representation
+design. You will learn how to represent a specified functionality (your
+interface) using fields and class invariants.
+
+## Design the Representation
+Once you have designed the interface, you can begin designing a concrete
 representation for it. Designing the representation means deciding what
 fields to use in order to implement the functionality specified by the
 interface, while thinking carefully about how the data corresponds to
@@ -54,7 +67,7 @@ needed to rule out representations that don't map to the problem domain.
     declare the fields needed to support the methods in the interface
     you’ve designed.
 
- 3. Below the declaration of the fields, write an implementor comment
+ 3. Below the declaration of the fields, write an implementer comment
     describing, as precisely as you can, your representation’s class
     invariant(s).
 
@@ -64,10 +77,11 @@ needed to rule out representations that don't map to the problem domain.
 
 Constructors and static factories are not part of the Java language’s
 notion of `interface`{.java}, but they are still essential parts of the
-public interface that a class or hierarchy presents to its clients. Now
-that you know what your representation is and what your invariants are,
-you can design how instances will be constructed. You need not implement
-construction, however—we are just interested in the interface for now.
+public interface (in the non-java sense of the word) that a class or hierarchy
+presents to its clients. Now that you know what your representation is and
+what your invariants are,you can design how instances will be constructed.
+You need not implement construction, however—we are just interested in the
+interface for now.
 
  4. In [`StrictCoinGameModel.java`](hw03/src/cs3500/hw03/StrictCoinGameModel.java),
     describe your constructor API. This comprises the names of any
