@@ -1,3 +1,5 @@
+package cs3500.hw03;
+
 /**
  * An interface for playing a coin game. The rules of a particular coin game
  * will be implemented by classes that implement this interface.
