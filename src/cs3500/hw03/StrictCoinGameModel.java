@@ -1,7 +1,8 @@
 package cs3500.hw03;
 
-/** You don't need to implement this class or any concrete subclasses
- * for pset04.
+/**
+ * You don't need to implement this class or any concrete subclasses
+ * for pset03.
  */
 public final class StrictCoinGameModel implements CoinGameModel {
   // (Exercise 2) Declare the fields needed to support the methods in
