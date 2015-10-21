@@ -1,4 +1,4 @@
-package cs3500.hw03;
+package cs3500.hw05;
 
 import java.util.ArrayList;
 
@@ -67,8 +67,35 @@ public final class StrictCoinGameModel implements CoinGameModel {
    * @throws IllegalArgumentException if the Strings for the players are not unique
    */
   protected StrictCoinGameModel(String board, String... players) {
-    // You don't need to implement this constructor.
-    throw new UnsupportedOperationException("no need to implement this");
+    Integer[] boardArray = new Integer[board.length()];
+    int coinCount = 0;
+    for (int i = 0; i < board.length(); i++) {
+      if (board.substring(i, i + 1).equals("O")) {
+        boardArray[i] = coinCount;
+        coinCount += 1;
+      } else if (!board.substring(i, i + 1).equals("-")) {
+        throw new IllegalArgumentException("Not a valid board configuration");
+      }
+    }
+    this.board = boardArray;
+
+    ArrayList<String> startingPlayers = new ArrayList<String>();
+    for(String player : players) {
+      if(startingPlayers.contains(player)) {
+        throw new IllegalArgumentException("Player names must be unique");
+      }
+      else {
+        startingPlayers.add(player);
+      }
+    }
+    this.players = startingPlayers;
+
+    if(this.players.size() != 0) {
+      this.currentPlayer = this.players.get(0);
+    }
+    if(this.isGameOver()) {
+      this.currentPlayer = null;
+    }
   }
 
   @Override
@@ -134,7 +161,8 @@ public final class StrictCoinGameModel implements CoinGameModel {
   private boolean validMove(String player, int coinIndex, int newPosition) {
     boolean validCoinAndPosition = coinIndex >= 0 && coinIndex < this.coinCount()
         && newPosition >= 0 && newPosition < this.board.length &&
-        this.board[newPosition] == null && player.equals(this.currentPlayer);
+        this.board[newPosition] == null && player.equals(this.currentPlayer)
+        && newPosition < this.getCoinPosition(coinIndex);
     if (coinIndex > 0) {
       return this.getCoinPosition(coinIndex - 1) < newPosition && validCoinAndPosition;
     } else {
@@ -155,33 +183,48 @@ public final class StrictCoinGameModel implements CoinGameModel {
 
   @Override
   public void addPlayer(String newPlayer, int playOrderPlace) {
-    if(this.uniqueName(newPlayer)) {
+    if(!this.players.contains(newPlayer)) {
       ArrayList<String> newPlayerList = new ArrayList<String>();
       newPlayerList.addAll(this.players.subList(0, playOrderPlace));
       newPlayerList.add(newPlayer);
       newPlayerList.addAll(this.players.subList(playOrderPlace, this.players.size()));
+      this.players.clear();
+      this.players.addAll(newPlayerList);
+      if(this.players.size() == 1) {
+        this.currentPlayer = newPlayer;
+      }
     }
     else {
       throw new IllegalArgumentException("Player name must be unique");
     }
   }
 
-  /**
-   *
-   * @param newPlayer
-   * @return
-   */
-  private boolean uniqueName(String newPlayer) {
-    return this.players.contains(newPlayer);
+  @Override
+  public String getWinner() {
+    if (!this.isGameOver() || this.currentPlayer == null) {
+      throw new IllegalStateException("Game is not over - no winner");
+    }
+    else if (this.players.size() > 0 && this.players.indexOf(this.currentPlayer) == 0) {
+      return this.players.get(this.players.size() - 1);
+    } else if(this.players.size() > 0) {
+      return this.players.get(this.players.indexOf(this.currentPlayer) - 1);
+    }
+    else {
+      throw new IllegalStateException("No players, so no winner");
+    }
   }
 
   @Override
-  public String getWinner() {
-    if(this.players.indexOf(this.currentPlayer) == 0) {
-      return this.players.get(this.players.size() - 1);
-    } else {
-      return this.players.get(this.players.indexOf(this.currentPlayer) - 1);
+  public String toString() {
+    String str = "";
+    for (Integer i : this.board) {
+      if (i == null) {
+        str = str + "-";
+      } else {
+        str = str + "O";
+      }
     }
+    return str;
   }
 
   // You don't need to implement any methods or constructors. However,
