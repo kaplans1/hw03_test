@@ -38,63 +38,75 @@ public interface CoinGameModel {
   boolean isGameOver();
 
   /**
-   * Moves coin number {@code coinIndex} to position {@code newPosition}. Throws {@code
-   * IllegalMoveException} if the requested move is illegal, which can happen in several ways:
+   * {@code player} moves coin number {@code coinIndex} to position {@code newPosition}. Throws
+   * {@code IllegalMoveException} if the requested move is illegal, which can happen in several
+   * ways:
    *
-   * <ul> <li>There is no coin with the requested index. <li>The new position is occupied by
-   * another
-   * coin. <li>There is some other reason the move is illegal, as specified by the concrete game
-   * class. </ul>
+   * <ul> <li>There is no coin with the requested index. <li>The new position is occupied by another
+   * coin. <li>It isn't {@code player}'s turn <li>There is some other reason the move is illegal, as
+   * specified by the concrete game class. </ul>
    *
    * Note that {@code coinIndex} refers to the coins as numbered from 0 to {@code coinCount() - 1},
    * not their absolute position on the board. However, coins have no identity, so if one coin
    * passes another, their indices are exchanged. The leftmost coin is always coin 0, the next
    * leftmost is coin 1, and so on.
    *
+   * Updates the current player to be the next player in the turn order.
+   *
+   * @param player      the player making the move
    * @param coinIndex   which coin to move (numbered from the left)
    * @param newPosition where to move it to
    * @throws IllegalMoveException the move is illegal
    */
-  void move(int coinIndex, int newPosition);
+  void move(String player, int coinIndex, int newPosition);
+
 
   /**
-   * Will add a new player to ArrayList<Player> of players. Players have an integer for an ID,
-   * and a
-   * way to extend for more things, like score, move count, etc.
-   */
-  void addPlayer();
-
-  /**
-   * Gets ID of next player. Cycles through all players in ArrayList<Player> If there are no
-   * players, returns -1.
+   * Gets the id of the player whose turn it currently is
    *
-   * @return Player id of player that goes next.
+   * @return the id of the player whose turn it currently is
+   * @throws IllegalStateException there are no players in the game and therefore no currentPlayer
    */
-  int getNextPlayer();
+  String getCurrentPlayer();
 
   /**
-   * Returns the player ID of the winning player. Initialized as null Set to correct player through
-   * move method when isGameOver() returns true.
+   * Counts the number of players currently in the game Assumption: players cannot leave the game
+   * once they are added
    *
-   * @return Player ID, which is an integer
+   *(Note: this should only return a copy of the player data, so that the player's identities
+   * cannot be altered)
+   *
+   * @return the list of players in the game
    */
-  int getWinner();
+  ArrayList<String> getPlayers();
 
   /**
-   * Gets full ArrayList<Player> from game
+   * Adds a new player with the given name to the game
    *
-   * @return ArrayList<Player>  of all players in the game.
+   * @param newPlayer the name of the player being added
+   * @param playOrderPlace place the new player should be added in the play order counting from zero
+   *                       e.g. putting a player in at zero will make the player first in the
+   *                       play order
+   * @throws IllegalArgumentException if the name of the player is the same as one of the players
+   *                                  currently in the game
    */
-  ArrayList<Player> getPlayers();
+  void addPlayer(String newPlayer, int playOrderPlace);
+
+  /**
+   * If game is over, gets the winner - the player who made the last move
+   *
+   * @return the winning player (player that made the last move)
+   * @throws IllegalStateException the game is not yet over
+   * @throws IllegalStateException there are no players in the game to win
+   */
+  String getWinner();
 
   /**
    * The exception thrown by {@code move} when the requested move is illegal.
    *
-   * <p>(Implementation Note: Implementing this interface doesn't require "implementing"
-   * the {@code
+   * <p>(Implementation Note: Implementing this interface doesn't require "implementing" the {@code
    * IllegalMoveException} class—it's already implemented right here. Nesting a class within an
-   * interface is a way to strongly associate that class with the interface, which makes sense
-   * here
+   * interface is a way to strongly associate that class with the interface, which makes sense here
    * because the exception is intended to be used specifically by implementations and clients of
    * this interface.)
    */
