@@ -73,47 +73,115 @@ public final class StrictCoinGameModel implements CoinGameModel {
 
   @Override
   public int boardSize() {
-    return 0;
+    return this.board.length;
   }
 
   @Override
   public int coinCount() {
-    return 0;
+    int count = 0;
+    for (Integer i : this.board) {
+      if (i != null) {
+        count += 1;
+      }
+    }
+    return count;
   }
 
   @Override
   public int getCoinPosition(int coinIndex) {
-    return 0;
+    for (int i = 0; i < this.board.length; i++) {
+      if (this.board[i] != null && this.board[i] == coinIndex) {
+        return i;
+      }
+    }
+    throw new IllegalArgumentException("No coin with the requested index");
   }
 
   @Override
   public boolean isGameOver() {
-    return false;
+    for (int i = 0; i < coinCount(); i++) {
+      if (this.getCoinPosition(i) != i) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @Override
   public void move(String player, int coinIndex, int newPosition) {
+    if (this.validMove(player, coinIndex, newPosition)) {
+      this.board[this.getCoinPosition(coinIndex)] = null;
+      this.board[newPosition] = coinIndex;
+      this.currentPlayer = this.players.get(
+          (this.players.indexOf(player) + 1) % this.players.size());
+    } else {
+      throw new IllegalMoveException("Illegal move");
+    }
+  }
 
+  /**
+   * Determines whether moving the given coin to the given position is a valid move according to the
+   * rules of this game
+   *
+   * A move is valid if: <ul> <li>coinIndex is a valid coin</li> <li>newPosition is a valid open
+   * position on the board</li> <li>moving the given coin does not result in "jumping" over
+   * another</li></ul>
+   *
+   * @param coinIndex   which coin to move (numbered from the left)
+   * @param newPosition where to move it to
+   * @return whether moving the given coin to the given position is valid
+   */
+  private boolean validMove(String player, int coinIndex, int newPosition) {
+    boolean validCoinAndPosition = coinIndex >= 0 && coinIndex < this.coinCount()
+        && newPosition >= 0 && newPosition < this.board.length &&
+        this.board[newPosition] == null && player.equals(this.currentPlayer);
+    if (coinIndex > 0) {
+      return this.getCoinPosition(coinIndex - 1) < newPosition && validCoinAndPosition;
+    } else {
+      return validCoinAndPosition;
+    }
   }
 
   @Override
   public String getCurrentPlayer() {
-    return null;
+    return this.currentPlayer;
   }
 
   @Override
   public ArrayList<String> getPlayers() {
-    return null;
+    ArrayList<String> copy = this.players;
+    return copy;
   }
 
   @Override
   public void addPlayer(String newPlayer, int playOrderPlace) {
+    if(this.uniqueName(newPlayer)) {
+      ArrayList<String> newPlayerList = new ArrayList<String>();
+      newPlayerList.addAll(this.players.subList(0, playOrderPlace));
+      newPlayerList.add(newPlayer);
+      newPlayerList.addAll(this.players.subList(playOrderPlace, this.players.size()));
+    }
+    else {
+      throw new IllegalArgumentException("Player name must be unique");
+    }
+  }
 
+  /**
+   *
+   * @param newPlayer
+   * @return
+   */
+  private boolean uniqueName(String newPlayer) {
+    return this.players.contains(newPlayer);
   }
 
   @Override
   public String getWinner() {
-    return null;
+    if(this.players.indexOf(this.currentPlayer) == 0) {
+      return this.players.get(this.players.size() - 1);
+    } else {
+      return this.players.get(this.players.indexOf(this.currentPlayer) - 1);
+    }
   }
 
   // You don't need to implement any methods or constructors. However,
